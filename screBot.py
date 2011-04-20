@@ -31,43 +31,43 @@ class MyBot(irc.IRCClient):
     def privmsg(self, user, channel, msg):
         user = user.split('!')[0]
         if '++' in msg:
-            if msg[len(msg)-1]=='+' and msg[len(msg)-2]=='+':
+            if msg.endswith('--'):
                 if msg.split('++')[0] == user:
                     self.msg(channel,"You can't plus yourself")
                     return
                 try:
                     self.myDict[msg.split('++')[0]] += 1
-                    print "+1 for "+user
+                    print "+1 for %s" % user
                     return
                 except:
                     self.myDict[msg.split('++')[0]] = 1
-                    print "The first +1 for "+user
+                    print "The first +1 for %s" % user
                     return
         if '--' in msg:
-            if msg[len(msg)-1]=='-' and msg[len(msg)-2]=='-':
+            if msg.endswith('--'):
                 try:
                     self.myDict[msg.split('--')[0]] = self.myDict[msg.split('--')[0]] - 1
                     print "-1 for "+user
                     return
                 except:
                     self.myDict[msg.split('--')[0]] = -1
-                    print "The first -1 for "+user
+                    print "The first -1 for %s" % user
                     return
         if msg.split()[0] == 'print':
             try:
                 msgToDisplay = msg.split()[1] + ": " + str(self.myDict[msg.split()[1]])
                 self.msg(channel,msgToDisplay)
-                print "I answered to "+user+":"+msgToDisplay
+                print "I answered to %s: %s" % (user,msgToDisplay)
                 return
             except:
-                self.msg(channel,"Non-existing member: "+msg.split()[1])
-                print "Non-existing member: "+msg.split()[1]
+                self.msg(channel,"Non-existing member: %s" % msg.split()[1])
+                print "Non-existing member: %s" % msg.split()[1]
 
 
 class MyBotFactory(protocol.ClientFactory):
     protocol = MyBot
 
-    def __init__(self, channel, nickname='screBot'):
+    def __init__(self, channel, nickname='scoreBot'):
         self.channel = channel
         self.nickname = nickname
 
