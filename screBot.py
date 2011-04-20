@@ -30,29 +30,27 @@ class MyBot(irc.IRCClient):
 
     def privmsg(self, user, channel, msg):
         user = user.split('!')[0]
-        if '++' in msg:
-            if msg.endswith('--'):
-                if msg.split('++')[0] == user:
-                    self.msg(channel,"You can't plus yourself")
-                    return
-                try:
-                    self.myDict[msg.split('++')[0]] += 1
-                    print "+1 for %s" % user
-                    return
-                except:
-                    self.myDict[msg.split('++')[0]] = 1
-                    print "The first +1 for %s" % user
-                    return
-        if '--' in msg:
-            if msg.endswith('--'):
-                try:
-                    self.myDict[msg.split('--')[0]] = self.myDict[msg.split('--')[0]] - 1
-                    print "-1 for "+user
-                    return
-                except:
-                    self.myDict[msg.split('--')[0]] = -1
-                    print "The first -1 for %s" % user
-                    return
+        if msg.endswith('++'):
+            if msg.split('++')[0] == user:
+                self.msg(channel,"You can't plus yourself")
+                return
+            try:
+                self.myDict[msg.split('++')[0]] += 1
+                self.msg(channel,  "+1 for %s") % user
+                return
+            except:
+                self.myDict[msg.split('++')[0]] = 1
+                self.msg(channel, "The first +1 for %s") % user
+                return
+        if msg.endswith('--'):
+            try:
+                self.myDict[msg.split('--')[0]] = self.myDict[msg.split('--')[0]] - 1
+                self.msg(channel, "-1 for %s") % user
+                return
+            except:
+                self.myDict[msg.split('--')[0]] = -1
+                self.msg(channel, "The first -1 for %s") % user
+                return
         if msg.split()[0] == 'print':
             try:
                 msgToDisplay = msg.split()[1] + ": " + str(self.myDict[msg.split()[1]])
